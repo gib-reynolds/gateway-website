@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gateway Operational Holdings</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --regent: #1B4332;
+    --regent-light: #2A5F45;
+    --ivory: #F5F0E8;
+    --ivory-dark: #E8E0D2;
+    --bronze: #A67C52;
+    --bronze-light: #C49A6C;
+    --muted: #5A6B63;
+    --white: #FFFFFF;
+    --text: #333333;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--text); line-height: 1.6; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--regent); border-bottom: 1px solid var(--regent-light); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-brand { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1rem; color: var(--ivory); letter-spacing: 0.2em; }
+  .nav-brand .diamond { color: var(--bronze-light); margin: 0 6px; font-size: 0.6rem; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: var(--ivory-dark); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.05em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ivory); }
+  .nav-links a.disabled { color: var(--muted); cursor: default; opacity: 0.5; }
+
+  /* HERO */
+  .hero { background: var(--regent); color: var(--ivory); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; }
+  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 700; letter-spacing: 0.4em; margin-bottom: 0.5rem; }
+  .hero-divider { display: flex; align-items: center; gap: 12px; margin: 1.25rem 0; }
+  .hero-divider .line { width: 80px; height: 1px; background: var(--ivory-dark); opacity: 0.5; }
+  .hero-divider .diamond { width: 8px; height: 8px; background: var(--bronze-light); transform: rotate(45deg); }
+  .hero .subtitle { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; letter-spacing: 0.5em; color: var(--ivory); margin-bottom: 3rem; }
+  .hero .tagline { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--ivory-dark); font-style: italic; max-width: 600px; line-height: 1.5; }
+
+  /* SECTIONS */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 960px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; color: var(--regent); margin-bottom: 0.5rem; }
+  .section-header .accent-line { width: 50px; height: 2px; background: var(--bronze); margin: 0 auto; }
+
+  /* ABOUT */
+  .about { background: var(--white); }
+  .about p { font-size: 1.05rem; max-width: 720px; margin: 0 auto 1.25rem; text-align: center; color: #555; }
+
+  /* PILLARS */
+  .pillars { background: var(--ivory); }
+  .pillar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+  .pillar-card { background: var(--white); border-radius: 8px; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-top: 3px solid var(--regent); transition: transform 0.2s; }
+  .pillar-card:hover { transform: translateY(-4px); }
+  .pillar-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--bronze); margin-bottom: 0.5rem; }
+  .pillar-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 600; color: var(--regent); margin-bottom: 0.75rem; line-height: 1.3; }
+  .pillar-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  /* OPERATOR */
+  .operator { background: var(--white); }
+  .operator-content { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .operator-content h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--regent); margin-bottom: 1rem; }
+  .operator-content p { color: #555; margin-bottom: 1rem; }
+  .experience-list { list-style: none; padding: 0; }
+  .experience-list li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; font-size: 0.9rem; color: #555; border-bottom: 1px solid var(--ivory-dark); }
+  .experience-list li::before { content: "\25C6"; position: absolute; left: 0; color: var(--bronze); font-size: 0.6rem; top: 0.7rem; }
+
+  /* CTA */
+  .cta { background: var(--regent); color: var(--ivory); text-align: center; padding: 4rem 2rem; }
+  .cta h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+  .cta p { color: var(--ivory-dark); max-width: 560px; margin: 0 auto 2rem; }
+  .cta-button { display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500; color: var(--regent); background: var(--ivory); padding: 14px 36px; border-radius: 4px; text-decoration: none; letter-spacing: 0.05em; transition: background 0.2s; }
+  .cta-button:hover { background: var(--ivory-dark); }
+
+  /* FOOTER */
+  footer { background: var(--regent); border-top: 1px solid var(--regent-light); padding: 2rem; text-align: center; }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 0.9rem; color: var(--ivory); letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+  .footer-brand .diamond { color: var(--bronze-light); margin: 0 6px; font-size: 0.55rem; }
+  footer p { font-size: 0.75rem; color: var(--muted); }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2.5rem; letter-spacing: 0.2em; }
+    .pillar-grid { grid-template-columns: 1fr 1fr; }
+    .operator-content { grid-template-columns: 1fr; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.75rem; }
+  }
+  @media (max-width: 480px) {
+    .pillar-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── KNOW THYSELF SECTION ── */
+  .know-thyself { background: var(--regent); color: var(--ivory); padding: 5rem 2rem; }
+  .kt-intro { text-align: center; max-width: 600px; margin: 0 auto 3rem; }
+  .kt-intro h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; color: var(--ivory); margin-bottom: 0.5rem; }
+  .kt-accent { width: 50px; height: 2px; background: var(--bronze); margin: 0.75rem auto 1.25rem; }
+  .kt-intro p { color: var(--ivory-dark); font-size: 0.95rem; line-height: 1.8; }
+  .kt-meta { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .kt-meta span { font-size: 0.72rem; color: var(--bronze-light); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Assessment shell */
+  #assessment-app { max-width: 660px; margin: 0 auto; }
+  .a-phase { display: none; }
+  .a-phase.active { display: block; }
+
+  /* Start card */
+  .start-card { background: var(--ivory); padding: 2.5rem 2rem; text-align: center; }
+  .start-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--bronze); text-transform: uppercase; font-weight: 600; margin-bottom: 1.25rem; }
+  .start-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--regent); font-style: italic; margin-bottom: 0.25rem; }
+  .start-rule { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 0.75rem 0 1rem; }
+  .start-rule .sr-line { width: 40px; height: 1px; background: var(--ivory-dark); }
+  .start-rule .sr-diamond { width: 7px; height: 7px; background: var(--bronze); transform: rotate(45deg); }
+  .start-card p { color: #666; font-family: 'Inter', sans-serif; font-size: 0.88rem; line-height: 1.75; max-width: 420px; margin: 0 auto 0.75rem; }
+  .start-note { font-style: italic; color: var(--bronze) !important; font-family: 'Cormorant Garamond', serif !important; font-size: 1rem !important; }
+  .start-btn { display: inline-block; margin-top: 1.75rem; background: var(--regent); color: var(--ivory); border: none; padding: 13px 34px; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+  .start-btn:hover { background: var(--regent-light); }
+
+  /* Progress */
+  .a-progress { height: 3px; background: var(--regent-light); }
+  .a-progress-fill { height: 100%; background: var(--bronze); transition: width 0.4s ease; width: 0%; }
+
+  /* Section banner */
+  .sec-banner { background: rgba(245,240,232,0.07); border-left: 3px solid var(--bronze); padding: 13px 18px; display: flex; align-items: flex-start; gap: 12px; }
+  .sec-icon { font-size: 18px; line-height: 1; margin-top: 2px; }
+  .sec-label-txt { font-family: 'Inter', sans-serif; font-size: 0.62rem; font-weight: 600; color: var(--bronze-light); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2px; }
+  .sec-subtitle-txt { font-family: 'Cormorant Garamond', serif; font-size: 0.92rem; color: var(--ivory-dark); font-style: italic; }
+
+  /* Section dots */
+  .sec-dots { display: flex; justify-content: center; gap: 7px; padding: 14px 0; }
+  .sec-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(245,240,232,0.18); transition: background 0.3s; }
+  .sec-dot.done { background: var(--bronze); }
+  .sec-dot.current { background: var(--ivory); }
+
+  /* Question card */
+  .q-card { background: var(--ivory); padding: 2.25rem 2rem; transition: opacity 0.22s; }
+  .q-card.fading { opacity: 0; }
+  .q-num { font-family: 'Inter', sans-serif; font-size: 0.62rem; color: #AAA; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .q-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.05rem,2.5vw,1.35rem); font-weight: 700; color: var(--regent); line-height: 1.5; margin-bottom: 1.5rem; }
+  .opts-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+  .opt-btn { display: flex; align-items: flex-start; gap: 10px; padding: 11px 15px; border: 2px solid #DDD; background: #FAFAFA; cursor: pointer; text-align: left; font-family: 'Inter', sans-serif; font-size: 0.86rem; line-height: 1.55; color: var(--text); transition: all 0.14s; width: 100%; }
+  .opt-btn:hover { border-color: var(--regent); background: #F0F5F2; }
+  .opt-btn.selected { border-color: var(--regent); background: #EBF2EE; color: var(--regent); font-weight: 500; }
+  .opt-letter { min-width: 20px; height: 20px; background: #E8E8E8; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #888; flex-shrink: 0; margin-top: 1px; }
+  .opt-btn.selected .opt-letter { background: var(--regent); color: var(--ivory); }
+  .a-next-btn { background: var(--regent); color: var(--ivory); border: none; padding: 11px 26px; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; opacity: 0.3; transition: opacity 0.2s; }
+  .a-next-btn.on { opacity: 1; }
+  .a-next-btn.on:hover { background: var(--regent-light); }
+
+  /* Tiebreaker */
+  .tb-header { text-align: center; padding: 1.75rem 0 1.25rem; }
+  .tb-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.22em; color: var(--bronze-light); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
+  .tb-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem,4vw,2.2rem); font-weight: 700; color: var(--ivory); font-style: italic; margin-bottom: 5px; }
+  .tb-note { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; color: var(--ivory-dark); font-style: italic; }
+  .tb-card { background: var(--ivory); padding: 2.25rem 2rem; transition: opacity 0.22s; }
+  .tb-card.fading { opacity: 0; }
+  .tb-prompt { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.1rem,2.5vw,1.4rem); font-weight: 700; color: var(--regent); margin-bottom: 1.5rem; line-height: 1.5; }
+  .tb-choices { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem; }
+  .tb-btn { padding: 18px 20px; border: 2px solid #DDD; background: #FAFAFA; cursor: pointer; text-align: left; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; line-height: 1.6; color: var(--text); transition: all 0.14s; width: 100%; }
+  .tb-btn:hover { border-color: var(--bronze); background: #FBF5EE; }
+  .tb-btn.selected { border-color: var(--bronze); background: #FBF5EE; color: #6B3F2A; font-weight: 600; }
+
+  /* Results */
+  .r-header { padding: 2.75rem 2rem; text-align: center; }
+  .r-icon { font-size: 46px; margin-bottom: 12px; }
+  .r-label { font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.22em; color: rgba(245,240,232,0.55); text-transform: uppercase; margin-bottom: 7px; }
+  .r-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.7rem,5vw,2.6rem); font-weight: 700; color: var(--ivory); font-style: italic; margin-bottom: 9px; }
+  .r-tagline { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; margin-bottom: 14px; line-height: 1.5; }
+  .r-badge { display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.7rem; background: rgba(245,240,232,0.12); padding: 4px 13px; letter-spacing: 0.05em; color: var(--ivory-dark); }
+  .r-section { background: var(--ivory); padding: 1.75rem 2rem; border-bottom: 1px solid var(--ivory-dark); }
+  .r-section-title { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--regent); margin-bottom: 10px; }
+  .r-section p { font-family: 'Inter', sans-serif; font-size: 0.9rem; line-height: 1.82; color: #444; margin: 0; }
+  .gauge { margin-bottom: 16px; }
+  .gauge-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .gauge-lbl { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #444; font-weight: 500; }
+  .gauge-pct { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #999; }
+  .gauge-track { height: 5px; background: #E0E0E0; border-radius: 3px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 3px; transition: width 1.2s ease; }
+  .gauge-poles { display: flex; justify-content: space-between; margin-top: 2px; }
+  .gauge-pole { font-family: 'Inter', sans-serif; font-size: 0.66rem; color: #BBB; }
+  .tb-signal { margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #888; font-style: italic; padding: 9px 13px; background: #F0EDE8; }
+  .watchout-section { background: #FEF9EE; padding: 1.75rem 2rem; border-bottom: 1px solid var(--ivory-dark); border-left: 4px solid #E8A838; }
+  .watchout-title { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #9A6B00; margin-bottom: 10px; }
+  .r-footer { background: var(--ivory); padding: 1.75rem 2rem; text-align: center; }
+  .r-footer-note { font-family: 'Inter', sans-serif; font-size: 0.76rem; color: #999; line-height: 1.8; font-style: italic; max-width: 440px; margin: 0 auto 1.25rem; }
+  .retake-btn { background: transparent; color: var(--regent); border: 1px solid var(--regent); padding: 9px 22px; font-family: 'Inter', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .retake-btn:hover { background: var(--regent); color: var(--ivory); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">GATEWAY <span class="diamond">&#9670;</span> OPERATIONAL HOLDINGS</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#framework">Framework</a>
+    <a href="#operator">Experience</a>
+    <a href="#contact">Contact</a>
+    <a href="#know-thyself" style="color:var(--bronze-light);">Know Thyself</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>GATEWAY</h1>
+  <div class="hero-divider"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
+  <div class="subtitle">OPERATIONAL HOLDINGS</div>
+  <div class="tagline">"Clarity Before Capital."</div>
+</div>
+
+<section class="about" id="about">
+  <div class="container">
+    <div class="section-header">
+      <h2>Independent Deal Assessment</h2>
+      <div class="accent-line"></div>
+    </div>
+    <p>Gateway Operational Holdings provides disciplined, operator-informed assessment of small business acquisition targets for search fund entrepreneurs and self-funded searchers.</p>
+    <p>We evaluate deals through the lens of someone who has actually operated the kinds of businesses our clients want to buy. Our four-pillar framework surfaces the risks and opportunities that don't show up in a CIM — so you can make confident decisions before committing capital.</p>
+    <p>We answer two questions: Should you spend more time on this deal? And what should you ask the seller next?</p>
+  </div>
+</section>
+
+<section class="pillars" id="framework">
+  <div class="container">
+    <div class="section-header">
+      <h2>Four-Pillar Assessment</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">I</div>
+        <h3>Business Model Viability</h3>
+        <p>Revenue durability, competitive moat, market position, pricing power, scalability potential.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">II</div>
+        <h3>Unit Economics &amp; Financial Health</h3>
+        <p>True margins, cash flow quality, cost structure, revenue concentration, debt capacity.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">III</div>
+        <h3>Operational Sustainability</h3>
+        <p>Owner dependency, process maturity, team capability, service delivery, growth capacity.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">IV</div>
+        <h3>Risk Profile</h3>
+        <p>Regulatory exposure, customer concentration, CapEx requirements, market risk, transition risk.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="operator" id="operator">
+  <div class="container">
+    <div class="section-header">
+      <h2>The Operator's Lens</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div style="max-width: 680px; margin: 0 auto;">
+        <p style="color: #555; margin-bottom: 1rem; font-size: 1rem; line-height: 1.85;">Gateway's principal brings direct operational experience across multiple blue-collar and service-based businesses. This isn't theoretical — every assessment is filtered through the reality of actually running these kinds of companies.</p>
+        <p style="color: #555; font-size: 1rem; line-height: 1.85;">That operator's perspective surfaces risks that financial analysis alone misses: the crew dynamics, the equipment maintenance cycles, the regulatory compliance burden, the customer relationships that exist only in the owner's phone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- KNOW THYSELF -->
+<section class="know-thyself" id="know-thyself">
+  <div class="kt-intro">
+    <h2>Know Thyself</h2>
+    <div class="kt-accent"></div>
+    <p>Before you evaluate the deal, evaluate yourself. This assessment identifies your searcher archetype — how you think about risk, operations, and outcomes — so every analysis is calibrated to who you actually are.</p>
+    <div class="kt-meta">
+      <span>⏱ 10–14 minutes</span>
+      <span>· 17 questions + tiebreaker</span>
+      <span>· 4 archetypes</span>
+    </div>
+  </div>
+
+  <div id="assessment-app">
+
+    <!-- START -->
+    <div class="a-phase active" id="ap-start">
+      <div class="start-card">
+        <div class="start-eyebrow">Searcher Self-Assessment</div>
+        <h3>The Searcher<br>Self-Assessment</h3>
+        <div class="start-rule"><span class="sr-line"></span><span class="sr-diamond"></span><span class="sr-line"></span></div>
+        <p>Every deal looks different depending on who's looking at it. This assessment identifies your natural orientation as a buyer — so the analysis you receive is calibrated to who you actually are, not a generic template.</p>
+        <p class="start-note">There are no right answers. There are only honest ones.</p>
+        <button class="start-btn" onclick="aStart()">Begin Assessment →</button>
+      </div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="a-phase" id="ap-questions">
+      <div class="sec-dots" id="a-dots"></div>
+      <div class="a-progress"><div class="a-progress-fill" id="a-fill"></div></div>
+      <div class="sec-banner">
+        <span class="sec-icon" id="a-sec-icon"></span>
+        <div><div class="sec-label-txt" id="a-sec-label"></div><div class="sec-subtitle-txt" id="a-sec-sub"></div></div>
+      </div>
+      <div class="q-card" id="a-qcard">
+        <div class="q-num" id="a-qnum"></div>
+        <div class="q-text" id="a-qtext"></div>
+        <div class="opts-list" id="a-opts"></div>
+        <button class="a-next-btn" id="a-next" onclick="aNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- TIEBREAKER -->
+    <div class="a-phase" id="ap-tiebreaker">
+      <div class="tb-header">
+        <div class="tb-eyebrow" id="tb-ey">Final Round · 1 of 4</div>
+        <div class="tb-title">The Tiebreaker</div>
+        <div class="tb-note">No middle ground. Choose the one that feels more true.</div>
+      </div>
+      <div class="tb-card" id="a-tbcard">
+        <div class="tb-prompt" id="tb-prompt"></div>
+        <div class="tb-choices" id="tb-choices"></div>
+        <button class="a-next-btn" id="tb-next" onclick="tbNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="a-phase" id="ap-results">
+      <div class="r-header" id="r-header">
+        <div class="r-icon" id="r-icon"></div>
+        <div class="r-label">Your Searcher Archetype</div>
+        <div class="r-name" id="r-name"></div>
+        <div class="r-tagline" id="r-tagline"></div>
+        <div class="r-badge" id="r-badge"></div>
+      </div>
+      <div class="r-section">
+        <div class="r-section-title">Who You Are</div>
+        <p id="r-desc"></p>
+      </div>
+      <div class="r-section">
+        <div class="r-section-title">Your Profile</div>
+        <div id="r-gauges"></div>
+        <div class="tb-signal" id="r-tbsig"></div>
+      </div>
+      <div class="r-section">
+        <div class="r-section-title">Deals That Fit You</div>
+        <p id="r-deals"></p>
+      </div>
+      <div class="watchout-section">
+        <div class="watchout-title">⚠ Your Honest Watch-Outs</div>
+        <p id="r-watchouts" style="font-family:'Inter',sans-serif;font-size:0.9rem;line-height:1.82;color:#555;margin:0;"></p>
+      </div>
+      <div class="r-footer">
+        <p class="r-footer-note">This assessment is built on a decade of entrepreneurial research, behavioral pattern analysis, and hard-won lessons from founders who learned what kind of game they were playing — sometimes too late. The output is a starting point for honest reflection, not a final verdict.</p>
+        <button class="retake-btn" onclick="aStart()">Retake Assessment</button>
+      </div>
+    </div>
+
+  </div><!-- /assessment-app -->
+</section>
+
+<section class="cta" id="contact">
+  <h2>Ready to Evaluate a Deal?</h2>
+  <p>If you're considering a small business acquisition and want an operator's honest assessment before you commit, let's talk.</p>
+  <a href="/cdn-cgi/l/email-protection#17707e75577076637260766e7867647f787b737e7970643974787a" class="cta-button">Get in Touch</a>
+</section>
+
+<footer>
+  <div class="footer-brand">GATEWAY <span class="diamond">&#9670;</span> OPERATIONAL HOLDINGS</div>
+  <p>&copy; 2026 Gateway Operational Holdings. All rights reserved.</p>
+</footer>
+
+<script>
+const SECTIONS=[
+  {label:"I. Risk & Return Orientation",sub:"Know the game you were made to play.",icon:"⚖️",qs:[
+    {id:"o1",text:"When evaluating a deal, what excites you most?",dim:"fvs",opts:[
+      {t:"Repeatable unit economics — one satisfied customer at a time.",s:1},
+      {t:"A defensible asset with an identifiable market mispricing.",s:2},
+      {t:"A proven model I can replicate at scale with capital.",s:3},
+      {t:"A compelling growth story in a hot market.",s:4}]},
+    {id:"o2",text:"How do you feel about paying a 6x EBITDA multiple for a business you love?",dim:"fvs",opts:[
+      {t:"Deeply uncomfortable — value has to come from operations, not hope.",s:1},
+      {t:"Acceptable if the asset has a clear path to multiple expansion.",s:2},
+      {t:"Fine if management can be strengthened post-close.",s:3},
+      {t:"Worth it if the market is moving and I need to act.",s:4}]},
+    {id:"o3",text:"Success depends on factors outside your control — interest rates, market timing, buyer sentiment. How do you react?",dim:"fvs",opts:[
+      {t:"Disqualifying. I only invest where I can predict, influence, or control outcomes.",s:1},
+      {t:"Acceptable if I can hedge the downside through deal structure.",s:2},
+      {t:"Part of the game — you manage what you can.",s:3},
+      {t:"Actually attractive — volatility creates opportunity.",s:4}]},
+    {id:"o4",text:"You find a business generating $400K in owner earnings, priced at $2M. The seller is motivated. What's your instinct?",dim:"arch",opts:[
+      {t:"Understand every customer relationship before I get excited about anything else.",s:1},
+      {t:"Figure out what this business is really worth to a strategic buyer in three years.",s:2},
+      {t:"Map the add-on acquisition landscape — is this a platform or a one-off?",s:3},
+      {t:"Model the upside scenario and what it would take to get there.",s:4}]}
+  ]},
+  {label:"II. Operational Temperament",sub:"What energizes you on a Tuesday at 7am?",icon:"🔧",qs:[
+    {id:"op1",text:"Day 90 post-close. A key employee gives notice. A major customer calls unhappy. Payroll runs Friday. You feel:",dim:"ops",opts:[
+      {t:"In my element. This is exactly the problem-solving I signed up for.",s:1},
+      {t:"Stressed but capable — I'll work through it.",s:2},
+      {t:"Overwhelmed. I need better systems before I can handle this.",s:3},
+      {t:"Questioning the whole decision.",s:4}]},
+    {id:"op2",text:"Two years in, the business is running well. Where does your mental energy go?",dim:"ops",opts:[
+      {t:"Deepening customer relationships and tightening the service delivery process.",s:1},
+      {t:"Watching comps, tracking what similar businesses are selling for, planning the exit.",s:2},
+      {t:"Hiring and developing the team that will eventually not need me day-to-day.",s:3},
+      {t:"Sourcing the next deal — this one is running, time to build the portfolio.",s:4}]},
+    {id:"op3",text:"The previous owner's best employee pulls you aside on week two. She knows where every body is buried. She's also clearly underpaid. You:",dim:"ops",opts:[
+      {t:"Sit down with her for two hours. She's now my most important relationship in the building.",s:1},
+      {t:"Fix her compensation immediately and note what this signals about the seller's practices.",s:2},
+      {t:"Put her in a key role and start building the org chart around her capabilities.",s:3},
+      {t:"Retain her through transition, then assess once I have the full picture.",s:4}]},
+    {id:"op4",text:"Your honest relationship with ambiguity and imperfect information:",dim:"ops",opts:[
+      {t:"I make fast, reversible decisions and learn through action. Trial and error is the method.",s:1},
+      {t:"I gather enough to be directionally confident, then act.",s:2},
+      {t:"I need a clear framework before deciding. Ambiguity is something to resolve, not navigate.",s:3},
+      {t:"I wait for the picture to clarify before committing.",s:4}]}
+  ]},
+  {label:"III. Exit & Outcome Intent",sub:"Begin with the end in mind.",icon:"🎯",qs:[
+    {id:"h1",text:"What does a successful outcome look like for this acquisition in 5–7 years?",dim:"bi",opts:[
+      {t:"Financial independence. The business funds my life and I own it outright or sell it cleanly.",s:1},
+      {t:"A platform — this is the first deal in a deliberate acquisition strategy.",s:2},
+      {t:"A roll-up — I aggregate competitors and sell to a larger buyer at a premium.",s:3},
+      {t:"A turnaround — buy distressed, fix it, sell for a step-change return.",s:4}]},
+    {id:"h2",text:"What is your honest minimum acceptable financial outcome?",dim:"bi",opts:[
+      {t:"Replace a strong income, build net worth gradually, own something real.",s:1},
+      {t:"Generate enough capital to fund the next, larger acquisition.",s:2},
+      {t:"A 3-5x return on invested equity within 5-7 years.",s:3},
+      {t:"A life-changing exit that creates generational flexibility.",s:4}]},
+    {id:"h3",text:"How important is concentrated equity ownership to you?",dim:"harv",opts:[
+      {t:"Critical — I want to own as much of this as possible.",s:1},
+      {t:"Important — I'll take outside capital but want to retain control.",s:2},
+      {t:"Flexible — I'll dilute meaningfully if it accelerates the outcome.",s:3},
+      {t:"Secondary — the return on equity matters more than the ownership percentage.",s:4}]}
+  ]},
+  {label:"IV. People & Leadership",sub:"The calling and the mission must reinforce each other.",icon:"👥",qs:[
+    {id:"p1",text:"Your identity as a leader is closest to:",dim:"lead",opts:[
+      {t:"Builder. I create something from nothing, one customer at a time.",s:1},
+      {t:"Operator. I optimize a running system, eliminating waste and compounding efficiency.",s:2},
+      {t:"Architect. I design the org, attract talent, and let them execute.",s:3},
+      {t:"Dealmaker. I find, structure, and exit opportunities — the business is a vehicle.",s:4}]},
+    {id:"p2",text:"Which management tension would stress you most?",dim:"lead",opts:[
+      {t:"Delegating work to people who won't do it as well as I would.",s:1},
+      {t:"Motivating frontline workers in a high-churn environment.",s:2},
+      {t:"Managing up to investors or board members who second-guess decisions.",s:3},
+      {t:"Keeping good people when you can't yet pay market rates.",s:4}]},
+    {id:"p3",text:"Do your personal goals and the mission of this type of business genuinely reinforce each other?",dim:"fit",opts:[
+      {t:"Yes — I am drawn to small business ownership as a craft, not just a vehicle.",s:1},
+      {t:"Mostly — I see real alignment, not just financial motivation.",s:2},
+      {t:"Somewhat — I'll be honest that it's primarily financial for me.",s:3},
+      {t:"Uncertain — I'm still working out the alignment.",s:4}]}
+  ]},
+  {label:"V. Real Constraints",sub:"The truth that deals with.",icon:"🔒",qs:[
+    {id:"c1",text:"How much personal financial runway do you have if the business underperforms for 18 months?",dim:"fr",opts:[
+      {t:"Significant — family finances are separate and secure.",s:1},
+      {t:"Adequate — we've budgeted for a difficult transition period.",s:2},
+      {t:"Tight — I'm counting on the business to replace income quickly.",s:3},
+      {t:"Very limited — this needs to work from day one.",s:4}]},
+    {id:"c2",text:"What does your family understand and accept about what this acquisition means?",dim:"fa",opts:[
+      {t:"Full alignment — we've had deep conversations and this is a shared decision.",s:1},
+      {t:"General support — they trust my judgment.",s:2},
+      {t:"Cautious support — they're on board but nervous about the risk.",s:3},
+      {t:"Limited discussion — this is largely my call.",s:4}]},
+    {id:"c3",text:"Your willingness to relocate or travel significantly for the right deal:",dim:"geo",opts:[
+      {t:"High — I will go where the right deal is.",s:1},
+      {t:"Moderate — within a reasonable driving range.",s:2},
+      {t:"Limited — geography is a hard constraint.",s:3},
+      {t:"None — this must be local.",s:4}]}
+  ]}
+];
+
+const TIEBREAKERS=[
+  {id:"t1",prompt:"Which mistake would be harder to live with?",
+   left:{t:"Paying too much for a business I had to fight to operate.",s:-1},
+   right:{t:"Missing a great deal because I analyzed it too long.",s:1}},
+  {id:"t2",prompt:"When a deal falls apart at the last minute, your first instinct is:",
+   left:{t:"Go back to the business — what did I miss that the market saw?",s:-1},
+   right:{t:"Go back to my process — where did I lose speed or leverage?",s:1}},
+  {id:"t3",prompt:"Five years from now, what would feel like the bigger win?",
+   left:{t:"A business that runs beautifully — customers loyal, team strong, cash predictable.",s:-1},
+   right:{t:"A transaction that returned 4x equity and funded the next, larger move.",s:1}},
+  {id:"t4",prompt:"A deal has great cash flow but the industry is shrinking slowly. You:",
+   left:{t:"Pass — I want to own something that compounds, not something I'm harvesting.",s:-1},
+   right:{t:"Look hard at the multiple and the exit window. Declining industries price assets cheaply.",s:1}}
+];
+
+const ARCHETYPES=[
+  {name:"The Bootstrap Tortoise",tagline:"Slow and steady. One customer at a time.",icon:"🐢",color:"#2D6A4F",accent:"#52B788",range:[1.0,1.8],
+   desc:"You are drawn to building — to finding an unsatisfied need, making a promise, and hustling until you can deliver on it. You are patient, process-oriented, and most satisfied when a business runs with the quiet efficiency of compounded good decisions. You will own most of what you build. You will build something that lasts.",
+   deals:"Niche B2B service businesses with recurring revenue, regulatory moats, and a clear repeatable process that can be standardized and handed off. You want to own 90%+, not 60%.",
+   watchouts:"You may undervalue deal speed and overpay with time rather than money. The right opportunity may require moving faster than feels comfortable. Not every deal needs to be perfect before you act."},
+  {name:"The Asset Fox",tagline:"Find the undervalued asset. Control the scarce resource.",icon:"🦊",color:"#6B3F2A",accent:"#C77C3E",range:[1.8,2.5],
+   desc:"You think in markets before you think in customers. You are drawn to the gap between what something is worth and what it is trading for — and you have developed the pattern recognition to find it. Your edge flows from market knowledge and negotiating skill. You are comfortable holding through uncertainty because you understand that cycles are the point, not the exception.",
+   deals:"Businesses where the real value lies in the licenses, contracts, customer relationships, or physical assets — not just trailing cash flow. Regulated industries, essential services, and infrastructure-adjacent businesses are natural fits. You buy what others undervalue.",
+   watchouts:"Operational complexity is invisible from the market analysis lens. The distance between owning an asset and running it well is longer than it looks from the outside. Do not underestimate what it takes to protect what you buy."},
+  {name:"The Platform Builder",tagline:"First deal. First step in a longer game.",icon:"🏗️",color:"#1B4F72",accent:"#2980B9",range:[2.5,3.2],
+   desc:"You see this acquisition as the anchor of something larger. You are comfortable with outside capital because the strategy requires it. You think about infrastructure before you need it and org design before the org exists. You are building a company, not buying a job — and you know the difference matters.",
+   deals:"A fragmented market with defensible unit economics, where scale creates a moat no single operator can replicate. The first acquisition must be the most operationally stable — it becomes your base camp for everything that follows.",
+   watchouts:"Platform strategies require mastery of the first deal before moving to the second. The difference between a platform and a distraction is operational excellence at the anchor. Move before you've earned that, and the whole structure weakens."},
+  {name:"The Opportunist",tagline:"Fast. Ambitious. Honest with yourself about what that means.",icon:"⚡",color:"#3D3D3D",accent:"#A0A0A0",range:[3.2,4.0],
+   desc:"You are drawn to scale, to markets moving in your direction, to structures that amplify returns. There is nothing wrong with this game — but it demands a different kind of honesty. The buyer who knows they are optimizing for a transaction outcome, and diligences accordingly, can do very well. The one who doesn't recognize it rarely does.",
+   deals:"Roll-ups in fragmented industries with meaningful multiple expansion potential. Turnarounds with a clear operational lever you can pull. Situations where deal speed and structuring instinct create an edge over more deliberate buyers.",
+   watchouts:"Almost all enduring business models take shape one step at a time. The shortcuts that look attractive at the outset extract their cost later — in capital, in time, or in the business itself."}
+];
+
+let si=0,qi=0,ans={},sel=null,busy=false;
+let tbi=0,tbAns={},tbSel=null,tbBusy=false;
+const TOTAL=SECTIONS.reduce((a,s)=>a+s.qs.length,0);
+
+function showPhase(id){
+  document.querySelectorAll('.a-phase').forEach(p=>p.classList.remove('active'));
+  document.getElementById('ap-'+id).classList.add('active');
+}
+function getArch(score){
+  return ARCHETYPES.find(a=>score>=a.range[0]&&score<a.range[1])||ARCHETYPES[ARCHETYPES.length-1];
+}
+function flatI(){return SECTIONS.slice(0,si).reduce((a,s)=>a+s.qs.length,0)+qi;}
+
+function aStart(){
+  si=0;qi=0;ans={};sel=null;busy=false;
+  tbi=0;tbAns={};tbSel=null;tbBusy=false;
+  showPhase('questions');renderDots();renderQ();
+}
+
+function renderDots(){
+  document.getElementById('a-dots').innerHTML=
+    SECTIONS.map((_,i)=>`<div class="sec-dot ${i<si?'done':i===si?'current':''}"></div>`).join('');
+}
+
+function renderQ(){
+  const sec=SECTIONS[si],q=sec.qs[qi],fi=flatI();
+  document.getElementById('a-fill').style.width=(fi/TOTAL*100)+'%';
+  document.getElementById('a-sec-icon').textContent=sec.icon;
+  document.getElementById('a-sec-label').textContent=sec.label;
+  document.getElementById('a-sec-sub').textContent=sec.sub;
+  document.getElementById('a-qnum').textContent='Question '+(fi+1)+' of '+TOTAL;
+  document.getElementById('a-qtext').textContent=q.text;
+  document.getElementById('a-opts').innerHTML=
+    q.opts.map((o,i)=>`<button class="opt-btn" onclick="pickOpt(this,${i})"><span class="opt-letter">${['A','B','C','D'][i]}</span>${o.t}</button>`).join('');
+  sel=null;
+  const nb=document.getElementById('a-next');
+  nb.classList.remove('on');
+  nb.textContent=(si===SECTIONS.length-1&&qi===SECTIONS[si].qs.length-1)?'Almost done →':'Next →';
+}
+
+function pickOpt(btn,idx){
+  document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');sel=idx;
+  document.getElementById('a-next').classList.add('on');
+}
+
+function aNext(){
+  if(sel===null||busy)return;
+  busy=true;
+  const q=SECTIONS[si].qs[qi];
+  ans[q.id]=q.opts[sel].s;
+  const card=document.getElementById('a-qcard');
+  card.classList.add('fading');
+  setTimeout(()=>{
+    sel=null;
+    const nq=qi+1;
+    if(nq<SECTIONS[si].qs.length){qi=nq;}
+    else{
+      const ns=si+1;
+      if(ns<SECTIONS.length){si=ns;qi=0;}
+      else{busy=false;card.classList.remove('fading');startTb();return;}
+    }
+    renderDots();renderQ();card.classList.remove('fading');busy=false;
+  },230);
+}
+
+function startTb(){tbi=0;tbAns={};tbSel=null;showPhase('tiebreaker');renderTb();}
+
+function renderTb(){
+  const tb=TIEBREAKERS[tbi];
+  document.getElementById('tb-ey').textContent='Final Round · '+(tbi+1)+' of '+TIEBREAKERS.length;
+  document.getElementById('tb-prompt').textContent=tb.prompt;
+  document.getElementById('tb-choices').innerHTML=
+    [tb.left,tb.right].map((o,i)=>`<button class="tb-btn" onclick="pickTb(this,${i})">${o.t}</button>`).join('');
+  tbSel=null;
+  const btn=document.getElementById('tb-next');
+  btn.classList.remove('on');
+  btn.textContent=(tbi===TIEBREAKERS.length-1)?'See My Results →':'Next →';
+}
+
+function pickTb(btn,idx){
+  document.querySelectorAll('.tb-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');tbSel=idx;
+  document.getElementById('tb-next').classList.add('on');
+}
+
+function tbNext(){
+  if(tbSel===null||tbBusy)return;
+  tbBusy=true;
+  const tb=TIEBREAKERS[tbi];
+  tbAns[tb.id]=(tbSel===0?tb.left:tb.right).s;
+  const card=document.getElementById('a-tbcard');
+  card.classList.add('fading');
+  setTimeout(()=>{
+    tbSel=null;
+    if(tbi+1<TIEBREAKERS.length){tbi++;renderTb();card.classList.remove('fading');tbBusy=false;}
+    else{tbBusy=false;card.classList.remove('fading');computeResult();}
+  },230);
+}
+
+function computeResult(){
+  const scores=Object.values(ans);
+  const base=scores.reduce((a,b)=>a+b,0)/scores.length;
+  const tbNet=Object.values(tbAns).reduce((a,b)=>a+b,0);
+  const adj=Math.max(1.0,Math.min(3.99,base+(tbNet/4)*0.3));
+  const arch=getArch(adj);
+
+  const dims={};
+  SECTIONS.forEach(s=>s.qs.forEach(q=>{
+    if(!dims[q.dim])dims[q.dim]=[];
+    if(ans[q.id])dims[q.dim].push(ans[q.id]);
+  }));
+  const da={};
+  Object.entries(dims).forEach(([k,v])=>{da[k]=v.reduce((a,b)=>a+b,0)/v.length;});
+
+  const h1=ans.h1||2;
+  const intent=h1===1?'Lifestyle / Independence':h1===2?'Platform Builder':h1===3?'Roll-Up':'Turnaround';
+  const tbLabel=tbNet<=-2?'Pulled toward deliberate, patient building':tbNet>=2?'Pulled toward speed, structure, and return':'Balanced — no strong directional pull';
+
+  document.getElementById('r-header').style.background=arch.color;
+  document.getElementById('r-icon').textContent=arch.icon;
+  document.getElementById('r-name').textContent=arch.name;
+  const tl=document.getElementById('r-tagline');
+  tl.textContent='"'+arch.tagline+'"';tl.style.color=arch.accent;
+  document.getElementById('r-badge').textContent='Buyer Intent: '+intent;
+  document.getElementById('r-desc').textContent=arch.desc;
+  document.getElementById('r-deals').textContent=arch.deals;
+  document.getElementById('r-watchouts').textContent=arch.watchouts;
+
+  const gauges=[
+    {label:'Build vs. Trade',val:1-(((da.fvs||2)-1)/3),L:'Trade',R:'Build'},
+    {label:'Hands-On Comfort',val:1-(((da.ops||2)-1)/3),L:'Delegate',R:'Operate'},
+    {label:'Family Alignment',val:ans.c2?1-((ans.c2-1)/3):0.5,L:'Fragile',R:'Aligned'},
+    {label:'Financial Resilience',val:ans.c1?1-((ans.c1-1)/3):0.5,L:'Vulnerable',R:'Secure'},
+  ];
+  document.getElementById('r-gauges').innerHTML=gauges.map(g=>`
+    <div class="gauge">
+      <div class="gauge-row"><span class="gauge-lbl">${g.label}</span><span class="gauge-pct">${Math.round(g.val*100)}%</span></div>
+      <div class="gauge-track"><div class="gauge-fill" style="width:${g.val*100}%;background:${arch.accent};"></div></div>
+      <div class="gauge-poles"><span class="gauge-pole">${g.L}</span><span class="gauge-pole">${g.R}</span></div>
+    </div>`).join('');
+  document.getElementById('r-tbsig').innerHTML='<strong>Tiebreaker signal:</strong> '+tbLabel;
+
+  showPhase('results');
+  document.getElementById('know-thyself').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</html>
